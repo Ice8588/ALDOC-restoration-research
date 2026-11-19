@@ -1,6 +1,6 @@
-# ALDOC
+# ALDOC-restoration-research
 
-**Automated Layer Decomposition and Occlusion Completion**
+**ALDOC · Automated Layer Decomposition and Occlusion Completion**
 
 ALDOC 研究如何把一張非寫實 2D 插圖拆成美術可獨立移動、隱藏與重組的圖層。以硬幣遮住寶箱為例，移走硬幣後，寶箱仍應保有原來的鎖扣、輪廓與位置。遊戲 UI、角色立繪與分層動畫都需要這種可單獨使用的部件。
 
