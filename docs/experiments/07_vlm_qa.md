@@ -35,7 +35,7 @@ Binary classification 排除 human-uncertain；VLM unavailable 另計，不能�
 
 ## 對後續研究的影響
 
-整合流程**保留 V3；V7 未採用**。後續 QA 需同時考慮錯誤辨識與候選挑選，而重試策略需要另驗證是否真的改善結果。
+這次固定候選實驗依預先設定的條件保留 V3。後續 Layer Lab 採用 V7，在生成每個候選後依序檢查殘留與補全品質；產品保留警示與人工複查，該次研究的替換結論仍按原協定記錄。[目前系統架構](../system_evolution.md)
 
 產品操作允許使用者檢視帶有風險提示的候選；研究的人工品質判定仍獨立保留。早期 closed-loop 與 retry 探索見 [歷史分支](09_historical_branches.md)。
 

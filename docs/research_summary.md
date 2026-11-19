@@ -1,4 +1,6 @@
-# 目前研究理解
+# ALDOC 的研究問題與目前證據
+
+分層可用性取決於三個連續決定：辨識要移動的完整物件、取出正確輪廓、恢復下方被遮住的結構。以前景遮住寶箱為例，即使鎖扣補得合理，若遮罩切掉箱蓋或整個箱體偏移，該層仍需要美術修正。Single-plan 先固定圖層清單；測試中的三層模式則分別在場景、物件與結構部件的尺度重新辨識。[系統架構](system_evolution.md)
 
 ## 目前得到的主要發現
 
@@ -6,9 +8,9 @@
 
 **更複雜的控制沒有自然帶來更好的結果。** BBox 與已測 Flow step-window 保留負結果；Attention screens 有限定範圍負結果，trace 僅供機制觀察；Structure、FlowEdit RQ1 與 Attention RQ3 仍缺完整品質比較。[研究分支](experiments/00_research_timeline.md)
 
-**QA 的選圖能力與判定可用的能力，需要分開衡量。** Frozen QA 比較中，部分新版選圖指標較好，但未滿足替換條件，整合流程仍保留 Completion QA V3。[VLM QA](experiments/07_vlm_qa.md)
+**QA 的選圖能力與判定可用的能力，需要分開衡量。** 歷史 frozen replay 中，V7 改善部分選圖指標，但仍誤收關鍵負例，該研究協定保留 V3。後續 Layer Lab 採用 V7 逐候選檢查並記錄警示。[VLM QA](experiments/07_vlm_qa.md)
 
-## 目前採用的研究流程
+## 如何隔離補全模組的效果
 
 ```mermaid
 flowchart TD
@@ -20,7 +22,7 @@ flowchart TD
  H --> R["分別記錄正結果、負結果與未定論"]
 ```
 
-目前採用的研究設定是 Qwen class-word Prompt V2 + Lab NoiseMask 3%，適用於 synthetic oracle 比較。Layer Lab 的操作流程使用通用移除提示詞與 Completion QA V3，研究配方和系統使用情境分開記錄。
+這組比較固定已知類別與遮罩，隔離 Qwen class-word Prompt V2 加入 Lab NoiseMask 3% 的效果。完整系統還須計入前後順序、定位、分割與先前補繪造成的誤差。
 
 Layer Lab 是已整合的預發布原型。它優先採用通過 QA 的候選；沒有通過者時，可保留 fail／uncertain 提示供使用者檢視、選擇目前較佳結果或重新生成。研究仍依獨立品質判定記錄這些結果。[系統操作](system_evolution.md) · [評估方法](evaluation.md)
 

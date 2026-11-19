@@ -12,6 +12,16 @@ Synthetic／AI-generated benchmark 可支持 smoke、controlled experiments、me
 
 已知合成層的像素可作該合成操作的精確參考，但不是 artist-authored exact GT；model-segmented／inpainted 資料只是 pseudo-label。正式真實美術主張仍需要權利清楚、artist-authored 的 component-level benchmark 與 operator QA。
 
+## 端到端分層如何比較
+
+比較 single-plan 與三層模式時，使用相同來源圖與 seed，逐層記錄下列結果。
+
+| 檢查對象 | 判讀方式 |
+|---|---|
+| 圖層歸屬與順序 | 隱藏最前方物件，檢查後方是否混入其碎片；逐一移動物件，確認配件歸屬和邊界。 |
+| 遮擋補全 | 單獨檢視露出區域、部件輪廓與原畫布位置，記錄殘留、幻覺、幾何漂移及來自前一輪的缺陷。 |
+| 美術可用性 | 記錄可直接使用、需要小修及必須重畫的部件數與修正時間；同時保留每張原圖的結果與未拆完的分支。 |
+
 ## Synthetic V2 的量測範圍
 
 固定 9 classes、27 samples、5 inference seeds，30 experimental configurations 的完整逐 seed scores 共 4,050 筆。這 30 個設定包括模型、prompt、mask 與 parameter variants，不是 30 個獨立研究方法。歷史資料中的 `method`／`methods` 欄位保留原 schema，應讀作 configuration identifiers。coverage 與 class 綁定，所以不能作覆蓋率的因果推論。模型／方法／guidance／oracle 分欄保存，跨 input privilege 不做 input-fair 排名。

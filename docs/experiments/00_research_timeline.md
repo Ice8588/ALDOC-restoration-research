@@ -13,7 +13,11 @@
 | 8 月下旬 | Flow 與幾何 reference 能否補足結構資訊？ | Step-window 未支持替換 baseline；RQ2 只完成幾何可行性，RQ1／RQ3 尚缺品質比較 | 分開保存負結果與待驗證分支；推進 standalone 系統整合 |
 | 8 月底至 9 月 | 新 QA 與更多 steps 是否值得採用？ | Frozen QA 保留 V3；steps 尚待人工評估；attention trace 僅供診斷 | 補齊逐層人工評估，持續檢查特定部件與 RGBA 可用性 |
 
-## 研究分支圖
+## 從補全實驗到整體分層
+
+到 10 月，Layer Lab 已使用 single-plan 建立圖層清單與遮擋順序，並將 V7 用於逐候選 QA。11 月加入選用的三層模式，在場景、完整物件與物件部件三種尺度上處理遮擋。此階段的比較焦點是可獨立使用的部件與人工修補成本。[分層與補全架構](../system_evolution.md)
+
+## 補全研究分支圖
 
 ```mermaid
 flowchart TD

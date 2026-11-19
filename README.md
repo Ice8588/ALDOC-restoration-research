@@ -1,16 +1,21 @@
-# 非寫實 2D 圖像之前景移除與遮擋區域補全
+# ALDOC
 
-Foreground Removal and Amodal Completion for Non-Photorealistic 2D Graphics
+**Automated Layer Decomposition and Occlusion Completion**
 
-**移除前景之後，如何補回原本被遮住的特定部件？** 本研究以遊戲 UI 與人物插圖為應用情境，希望恢復被硬幣遮住的寶箱、被物件遮住的角色部件，同時保留原有形狀、位置與畫風，減少美術拆圖與修補工作。
+ALDOC 研究如何把一張非寫實 2D 插圖拆成美術可獨立移動、隱藏與重組的圖層。以硬幣遮住寶箱為例，移走硬幣後，寶箱仍應保有原來的鎖扣、輪廓與位置。遊戲 UI、角色立繪與分層動畫都需要這種可單獨使用的部件。
 
-我以 FLUX／Qwen Image Edit 建立 baseline，比較提示詞、區域與生成過程控制，再用配對實驗、失敗案例與 VLM QA 檢查效果；生成側成果整合至團隊的 Layer Lab。
+## 從插圖到可編輯圖層
 
-<img src="assets/results/paired/hero_failure_improvement.png" alt="書本與戒指改善案例：Input → Remove foreground（編輯遮罩）→ Baseline → NoiseMask → Target" width="960">
+Layer Lab 是團隊整合這套研究流程的原型。辨識模組決定先取哪個目標，SAM3 擷取可見輪廓，影像編輯模型移除目標並補回下方內容。VLM 分別檢查目標是否消失、露出的部位是否可用；系統在採用候選後才處理下一層。
 
-*同一輸入、同一 seed 的配對案例：Baseline 改變書本視角或生成多餘戒指結構；加入 NoiseMask 後，結果更接近目標。LPIPS 越低越好；整體表現見下方配對數表。[案例分析與完整 seed 比較](docs/qualitative_results.md#selected-improvements)*
+| 分層方式 | 從哪裡開始 | 如何決定下一層 |
+|---|---|---|
+| Single-plan（自動工作的預設） | 在原圖建立圖層清單，獨立複查遮擋順序 | 依清單在目前影像定位目標。部位框輔助定位，每個清單元素輸出一層 |
+| 三層架構（已實作，測試中） | S1 分開背景與前景集合 | S2 在更新後的前景逐一取出完整物件，S3 再將各物件拆成結構部件；最後的物件或本體直接保留 |
 
-## Layer Lab Demo
+三層模式可輸出原畫布座標的 RGBA 圖層、重建圖、PSD 與階層關係。研究要回答的是，拆出的部件移開後是否完整，以及美術要花多少時間修正。三層模式對這兩項指標的收益仍待驗證。[系統架構與操作展示](docs/system_evolution.md) · [評估方法](docs/evaluation.md)
+
+## Layer Lab 操作影片（既有遮罩流程）
 
 https://github.com/user-attachments/assets/5b7b9321-4069-4f06-bf7e-644f1d1b779f
 
@@ -18,7 +23,7 @@ https://github.com/user-attachments/assets/5b7b9321-4069-4f06-bf7e-644f1d1b779f
 
 Demo 主要展示提供遮罩後的逐層補全與圖層操作；完整 Layer Lab 另整合團隊的自動分層模組。[操作說明](docs/system_evolution.md) · [下載 MP4](assets/prototype/Layer_Lab_DEMO.mp4) · [素材來源](docs/public_sources.md#demo-artwork)
 
-## 研究問題
+## 遮擋補全研究
 
 一般物件移除著重補出合理背景；本研究更要求恢復原本被遮住的「特定部件」（Amodal Completion）。例如補成另一個合理的寶箱，仍可能改錯鎖扣或箱體結構。
 
@@ -49,11 +54,15 @@ flowchart TD
  E --> Q["VLM QA｜比較判斷與選圖能力，保留 V3"]
 ```
 
-圖中的 Positive 限於合成資料自動指標；Attention 的多個標籤分別對應不同分支。其他探索與未採用設定見 [6–9 月研究時間軸與完整分支](docs/experiments/00_research_timeline.md)。
+圖中呈現 6–9 月的補全研究。Positive 限於合成資料自動指標；QA 的 V3 結論限於當時的固定候選比較。[研究時間軸與實驗分支](docs/experiments/00_research_timeline.md)
 
 ## 代表性研究結果
 
 ### NoiseMask｜降低無關區域變動
+
+<img src="assets/results/paired/hero_failure_improvement.png" alt="同一輸入與 seed 的書本、戒指案例，並列 baseline、NoiseMask 與參考目標" width="960">
+
+*Baseline 改變書本視角或產生多餘戒指結構；這兩例加入 NoiseMask 後更接近參考目標。[案例分析與完整 seed 比較](docs/qualitative_results.md#selected-improvements)*
 
 Prompt-based editing 能執行移除，但非編輯區域仍可能被改動。因此在相同 Prompt V2 下加入 NoiseMask，保留非編輯區域的 latent，讓修改集中於指定範圍。
 
@@ -72,22 +81,7 @@ Synthetic V2 共 **30 experimental configurations × 27 samples × 5 seeds**，�
 
 ### VLM QA｜選到較好候選，與判定可用，是兩個問題
 
-在固定候選的比較中，V7 的 strict stage pass 為 86.8%，V3 為 79.8%；但 V7 未通過預先設定的關鍵錯誤檢查，因此仍保留 V3。選圖收益保留為 Diagnostic Only，替換決策維持 Negative。[VLM QA 實驗](docs/experiments/07_vlm_qa.md)
-
-## 從研究到完整系統
-
-Layer Lab 將研究功能放進可操作的圖層還原流程。以下為完整系統的模組關係：
-
-```mermaid
-flowchart LR
- I["輸入圖像"] --> D["自動分層<br/>組員主要負責"]
- D --> L["選擇圖層"]
- L --> G["生成與補全<br/>我的主要研究"]
- G --> Q["品質評估<br/>我的 VLM QA 工作"]
- Q --> O["還原圖層"]
-```
-
-完整系統由團隊整合；我負責生成側的系統整合。操作展示、合成資料實驗與逐層美術可用性評估各有不同用途。[目前研究理解](docs/research_summary.md)
+在固定候選的比較中，V7 的 strict stage pass 為 86.8%，V3 為 79.8%。V7 仍將部分關鍵負例判為可接受，當時的 benchmark 保留 V3。後續 Layer Lab 採用 V7 逐候選檢查，保留失敗與不確定的警示供人工複查。[VLM QA 實驗](docs/experiments/07_vlm_qa.md)
 
 ## 個人貢獻
 
