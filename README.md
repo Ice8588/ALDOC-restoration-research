@@ -15,7 +15,7 @@ Layer Lab 是團隊整合這套研究流程的原型。辨識模組決定先取�
 
 三層模式可輸出原畫布座標的 RGBA 圖層、重建圖、PSD 與階層關係。測試中的版本進一步記錄每個前景應歸屬的物件，以及物件內可獨立操控的部件。最新的 v1.9 從原圖裁出小部件及周邊像素進行分割與補繪，再將結果映回原座標。這些修改對可用圖層比例與人工修補時間的影響仍待驗證。[架構與版本差異](docs/system_evolution.md)
 
-**三層分層的實驗怎麼做、得到什麼結果？** [實驗方法、數據與適用範圍](docs/experiments/10_hierarchical_evaluation.md) · [圖層評估方法](docs/evaluation.md)
+**三層分層的實驗怎麼做、得到什麼結果？** [分層實驗與模型分數](docs/experiments/10_hierarchical_evaluation.md) · [模型常駐、VRAM 與實測耗時](docs/experiments/11_gpu_runtime.md) · [圖層評估方法](docs/evaluation.md)
 
 ## Layer Lab 操作影片（既有遮罩流程）
 
