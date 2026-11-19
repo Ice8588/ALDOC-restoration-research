@@ -16,6 +16,8 @@ Synthetic／AI-generated benchmark 可支持 smoke、controlled experiments、me
 
 比較 single-plan 與三層模式時，使用相同來源圖與 seed，逐層記錄下列結果。
 
+已完成的實驗涵蓋文字規劃、可見像素分割與三場景的完整推論嘗試，各有自己的分母。實測資料與未完成的對照見[分層架構實驗](experiments/10_hierarchical_evaluation.md)。
+
 | 檢查對象 | 判讀方式 |
 |---|---|
 | 圖層歸屬與順序 | 隱藏最前方物件，檢查後方是否混入其碎片；逐一移動物件，確認配件歸屬和邊界。 |
