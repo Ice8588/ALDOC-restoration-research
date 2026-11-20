@@ -10,7 +10,7 @@
 |---|---|
 | Synthetic V2 | 9 classes、27 samples、seeds 0–4；object-centric analysis |
 | Synthetic V3 | 50 samples、5 seeds、2 stages；量測 reveal region |
-| Inference steps | 固定 Qwen 2511 NoiseMask 輸入，20／30／40 steps；量測 direct-reveal 區域與推論時間 |
+| Inference steps | 固定 Qwen 2511 NoiseMask 輸入，4／10／20／30／40 steps；量測 direct-reveal 區域、推論時間與峰值 VRAM |
 
 V2 共 30 experimental configurations、4,050 筆分數，包含模型、prompt、mask 與參數變體。已知類別與遮罩屬於 oracle input。歷史 exact-mask、V2 object-centric、V3 reveal-region 與企業 direct-reveal 各自保留評分定義，不跨表直接排名。
 
@@ -33,7 +33,9 @@ V2 的 [Prompt V2／NoiseMask 配對結果](03_noise_mask.md)已有完整自動�
 
 [完整 V3 表格](../../assets/results/synthetic_v3/table.md)保留每類結果、CI 與 sample wins。
 
-企業合作資料的 steps 比較已保存自動指標與時間：20／30／40 steps 的平均推論時間分別為 36.69／54.66／66.48 秒，品質指標沒有形成一致的排序，仍待人工判讀。[完整 steps 比較](../industry_aggregate_results.md)
+合作資料的步數比較覆蓋 950 張，含原先 20／30／40 steps 的 570 張與後續 4／10 steps 新增的 380 張。4 steps 的平均推論時間為 6.09 秒，相較於 20 steps，direct-reveal 的 PSNR、SSIM 較低，LPIPS 較高，三項表現均較差；30 steps 的 LPIPS 最低，20 steps 的 PSNR、SSIM 最高。各臂最大 PyTorch allocated peak 都為 67.92 GiB。五臂尚缺足以選定步數的人工品質證據。[完整 steps 比較](../industry_aggregate_results.md#inference-step-comparison--inconclusive)
+
+Scope 會影響結果的解讀。[自製 Icons V1](03_noise_mask.md#918-自製-icons-v1-配對實驗)以 direct-reveal 比較遮罩引導並保留 720 張人工判定。[固定提示詞重跑](07_vlm_qa.md#10101014-固定提示詞五種子重跑)以原始 removal mask 評估 840 張，人工同時保留逐張通過數與來源圖等權估計。兩組各自固定區域、樣本與聚合規則。
 
 ## 判讀
 

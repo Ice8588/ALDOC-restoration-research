@@ -26,6 +26,10 @@
 
 這個 visible-mask 0% 的公開例子中，硬幣所在區域大多成為黑色缺口，寶箱中央沒有補回。它呈現的是補全不完整；單靠這張圖還無法確定造成缺口的機制。
 
+## 9/3 Attention trace 診斷
+
+Qwen Image Edit 2511／NoiseMask 的獨立單物件移除保留 190 張生成輸出及 190 份 attention trace，使用 20 steps、八個抽樣層，記錄 conditional pass 中 edit queries 對 source keys 的 attention。模型平均推論時間為 37.53 秒／張，單次最高 PyTorch allocated peak 為 67.92 GiB。後續人工評為 157 pass、33 fail。16 個同時包含 pass 和 fail 的 stages 中，11 個 stage 的 pass 組在 removal mask 內 attention fraction 較低，另 5 個較高。這組關聯提供診斷線索，仍缺控制干預來判定因果與補全品質增益。
+
 ## 判讀
 
 三類證據分開保留：

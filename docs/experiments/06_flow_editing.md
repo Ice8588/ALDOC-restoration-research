@@ -16,9 +16,9 @@
 
 ## 結果
 
-Step-window pilot 已完成生成與人工評估，在目前限定設定下未支持替換 baseline，保留 **Negative**。
+Step-window pilot 共 72 張。主要比較的時間窗與 fresh baseline 各有 12/18 人工通過，逐一配對的 pass／fail 完全一致。這項限定試驗保留 **Negative**。
 
-Signed / extreme scale 保留 912 筆 metric rows 的整體比較。Scale +8 的 LPIPS 差值 CI 跨過 0；+32、−2、−4 等設定的指標呈現退化。完整七組 scale、CI 與聚合方式見 [企業合作資料結果](../industry_aggregate_results.md)。這部分仍缺人工評估，屬於 **Diagnostic Only**。
+Signed / extreme scale 保留 912 筆 metric rows 的整體比較。Scale +8 的 LPIPS 差值 CI 跨過 0；+32、−2、−4 等設定的指標呈現退化。完整七組 scale、CI 與聚合方式見 [合作資料結果](../industry_aggregate_results.md)。這部分仍缺人工評估，屬於 **Diagnostic Only**。
 
 RQ1 FlowEdit transport 已完成實作，但缺完整配對生成與品質評估，目前沒有足以判斷補全收益的正式結果，維持 **Inconclusive**。
 
